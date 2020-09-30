@@ -25,7 +25,7 @@ class DetailsActivity : AppCompatActivity() {
 
         if(intent.hasExtra("Location")){
             val location = intent.getIntExtra("Location",0)
-            if (location > 0)
+            if (location > 0)// && viewModel.response.value == null)
                 viewModel.getWeather(location)
         }
 

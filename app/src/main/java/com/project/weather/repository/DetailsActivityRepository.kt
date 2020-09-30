@@ -16,8 +16,14 @@ class DetailsActivityRepository(val application: Application) {
 
     val showProgress = MutableLiveData<Boolean>()
     val response = MutableLiveData<WeatherResponse>()
+    var lastRequestTime : Long = -1
 
     fun getWeather(woeid : Int){
+
+        if((System.currentTimeMillis() - lastRequestTime < 1000)){
+            return
+        }
+
         showProgress.value = true
 
         val retrofit = Retrofit.Builder()
@@ -37,6 +43,7 @@ class DetailsActivityRepository(val application: Application) {
                 call: Call<WeatherResponse>,
                 resp: Response<WeatherResponse>
             ) {
+                lastRequestTime = System.currentTimeMillis()
                 response.value = resp.body()
                 showProgress.value = false
             }
