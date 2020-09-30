@@ -18,6 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivityRepository(val application: Application) {
     val showProgress = MutableLiveData<Boolean>()
+    val locationList = MutableLiveData<List<Location>>()
 
     fun changeState(){
         showProgress.value = showProgress.value != null && showProgress.value!!
@@ -33,21 +34,39 @@ class SearchActivityRepository(val application: Application) {
 
         val service = retrofit.create(WeatherNetwork::class.java)
 
-        service.getWeather("2295424").enqueue(object : Callback<WeatherResponse>{
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+        service.getLocation(searchString).enqueue(object : Callback<List<Location>>{
+            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
                 showProgress.value = false
                 Toast.makeText(application,"Error while accessing the API", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
+                call: Call<List<Location>>,
+                response: Response<List<Location>>
             ) {
                 Log.d("SearchRepository","Response : ${Gson().toJson(response.body())}")
+                locationList.value = response.body()
                 showProgress.value = false
             }
 
         })
+
+//        service.getWeather("2295424").enqueue(object : Callback<WeatherResponse>{
+//            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+//                showProgress.value = false
+//                Toast.makeText(application,"Error while accessing the API", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onResponse(
+//                call: Call<WeatherResponse>,
+//                response: Response<WeatherResponse>
+//            ) {
+//                Log.d("SearchRepository","Response : ${Gson().toJson(response.body())}")
+//                showProgress.value = false
+//            }
+//
+//        })
+
 //        service.getLocation(searchString).enqueue(object : Callback<List<Location>>{
 //            override fun onFailure(call: Call<List<Location>>, t: Throwable) {
 //                showProgress.value = false

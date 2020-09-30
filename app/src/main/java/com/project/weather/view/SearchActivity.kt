@@ -7,12 +7,14 @@ import android.view.View.VISIBLE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.project.weather.R
+import com.project.weather.adapter.LocationAdapter
 import com.project.weather.viewModel.SearchActivityViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var viewModel : SearchActivityViewModel
+    private lateinit var adapter : LocationAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,5 +33,12 @@ class SearchActivity : AppCompatActivity() {
             else
                 search_progress.visibility = GONE
         })
+
+        viewModel.locationList.observe(this, Observer {
+            adapter.setLocationList(it)
+        })
+
+        adapter = LocationAdapter(this)
+        rv_search.adapter = adapter
     }
 }

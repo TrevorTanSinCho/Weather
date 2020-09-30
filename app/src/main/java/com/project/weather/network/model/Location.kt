@@ -4,10 +4,8 @@ package com.project.weather.network.model
 import com.google.gson.annotations.SerializedName
 
 data class Location(
-    @SerializedName("latt_long")
-    val lattLong: String,
-    @SerializedName("location_type")
-    val locationType: String,
+    val latt_long: String,
+    val location_type: String,
     val title: String,
     val woeid: Int
 )

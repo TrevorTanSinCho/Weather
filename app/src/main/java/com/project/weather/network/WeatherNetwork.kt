@@ -15,5 +15,5 @@ interface WeatherNetwork {
     fun getLocation(@Query("query")searchString: String) : Call<List<Location>>
 
     @GET("{woeid}")
-    fun getWeather(@Path("woeid") woeid: String): Call<WeatherResponse>
+    fun getWeather(@Path("woeid") woeid: Int): Call<WeatherResponse>
 }
