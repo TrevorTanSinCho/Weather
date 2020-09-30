@@ -1,6 +1,7 @@
 package com.project.weather.repository
 
 import android.app.Application
+import android.os.AsyncTask
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -10,6 +11,7 @@ import com.project.weather.network.BASE_URL
 import com.project.weather.network.WeatherNetwork
 import com.project.weather.network.model.Location
 import com.project.weather.network.model.WeatherResponse
+import com.project.weather.room.WeatherDatabase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,6 +48,8 @@ class SearchActivityRepository(val application: Application) {
             ) {
                 Log.d("SearchRepository","Response : ${Gson().toJson(response.body())}")
                 locationList.value = response.body()
+                if (response.body() != null)
+                    InsertLocationData(response.body()!!, application).execute()
                 showProgress.value = false
             }
 
@@ -82,5 +86,16 @@ class SearchActivityRepository(val application: Application) {
 //            }
 //
 //        })
+    }
+
+    class InsertLocationData(val list : List<Location>, val application: Application) : AsyncTask<Void, Void, Void>(){
+        override fun doInBackground(vararg p0: Void?): Void? {
+            WeatherDatabase.get(application).getWeatherDao().insertLocation(list)
+            WeatherDatabase.get(application).getWeatherDao().getLocation("%ban%").forEach {
+                Log.d("SearchRepository", "location : ${it.title}")
+            }
+            return null
+        }
+
     }
 }
